@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<!-- Bác tìm kiếm gì ở đây? -->
+<!-- Bác tìm kiếm gì ở đây? -->
+<!-- Bác tìm kiếm gì ở đây? -->
+<!-- Bác tìm kiếm gì ở đây? -->
+
+<html>
+<head>
+    <title>Tuỳ biến CyberHud</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    <div class="topnav">
+        <h1>Tuỳ biến CyberHud</h1>
+    </div>
+    <div class="content">
+        <p>
+            <button id="connectBleButton" class="connectButton"> Kết nối CyberHud (ấn vào đây) </button>
+        </p>
+        <p class="gray-label">Trạng thái kết nối: <strong><span id="bleState" style="color:#d13a30;">Không kết nối</span></strong></p>
+   
+    </div>
+    
+    <div id="configBlock" style="display: none;">
+    <p>
+        <p>
+            Sửa giá trị trong bảng dưới rồi ấn <b>Gửi</b>
+        </p>
+        <table>
+            <tr>
+                <td>Xoay màn hình</td>
+                <td>
+                    <select id="display_rotation" onchange="updateConfig()">
+                        <option value="1">1 (cổng sạc bên phải)</option>
+                        <option value="3">3 (cổng sạc bên trái)</option>
+                        <option value="5">5 (ảnh ngược, cổng sạc bên phải)</option>
+                        <option value="7">7 (ảnh ngược, cổng sạc bên trái)</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Upload ảnh màn hình khởi động (1) </td>
+                <td>
+                    <button id="transfer-file-button">Upload</button>
+                    <div id="file-transfer-percent" style="display: none;">0%</div>
+                </td>
+            </tr>
+            <tr>
+                <td>Thời gian hiện ảnh màn hình khởi động (2) </td>
+                <td>
+                    <input type="number" id="boot_screen_duration" min="0" max="255" onchange="updateConfig()">
+                </td>
+            </tr>
+
+            <tr>
+                <td>Độ sáng LED cảnh báo</td>
+                <td>
+                    <input type="range" id="led_brightness" min="1" max="10" oninput="updateConfig()">
+                </td>
+            </tr>
+
+            <tr>
+                <td>Độ sáng màn hình khi trời tối</td>
+                <td>
+                    <input type="range" id="night_brightness" min="1" max="10" oninput="updateConfig()">
+                </td>
+            </tr>
+
+            
+            <tr>
+                <td>Cảnh báo tốc độ trễ (3) </td>
+                <td>
+                    <input type="number" id="speed_limit_offset" min="0" onchange="updateConfig()">
+                </td>
+            </tr>
+
+        </table>
+        <p>
+            <i>
+                1) Ảnh jpeg 320x240, nhở hơn 100KB. CyberHud tự khởi động lại khi up thành công <br>
+                2) Thời gian đơn vị giây. Tối đa 255 giây. 0 giây tức là không hiện. <br>
+                3) Cảnh báo tốc độ trễ ví dụ tốc độ giới hạn là 50km/h, muốn đi vượt quá 53km/h mới cảnh báo thì nhập 3 <br>
+            </i>
+        </p>
+        <p>          
+        </p>
+        <table>
+            <tr>
+                <td>Kết nối đầu đọc obd vgate icar pro 4.0 <br>Chỉ bật khi có đầu đọc</td>
+                <td>
+                    <select id="obd_scan_duration" onchange="updateConfig()">
+                        <option value="0">0 (Tắt)</option>
+                        <option value="5">5 (Bật scan 5s)</option>                
+                        <option value="10">10 (Bật scan 10s)</option>                
+                    </select>
+                </td>
+            </tr>
+          <!--  <tr style="display: none;>
+                <td>Tự ngủ sau khi có kết nối (giây) </td>
+                <td>
+                    <input type="number" id="awake_duration" min="0" onchange="updateConfig()">
+                </td>
+            </tr>
+            <tr style="display: none;>
+                <td>Thời gian ngủ (giây) </td>
+                <td>
+                    <input type="number" id="sleep_duration" min="0" onchange="updateConfig()">
+                </td>
+            </tr> -->
+        </table>    
+        
+        <p>
+            <button id="sendButton" onclick="send()">Gửi</button> <strong><span id="sendState" style="color:#24af37;"></span></strong>
+        </p>
+        <p>
+            <input type="text" size="140"  id="configOutput" readonly style="display: none;">
+        </p>
+        
+    </p>
+</div>
+</body>
+
+<script>
+
+  const _0x24aab0=_0x4339;(function(_0x3d0d88,_0x49f784){const _0xf66607=_0x4339,_0x359041=_0x3d0d88();while(!![]){try{const _0x59527d=parseInt(_0xf66607(0x1d4))/0x1+parseInt(_0xf66607(0x1b8))/0x2+parseInt(_0xf66607(0x1c8))/0x3*(-parseInt(_0xf66607(0x197))/0x4)+parseInt(_0xf66607(0x1ca))/0x5*(-parseInt(_0xf66607(0x1e9))/0x6)+parseInt(_0xf66607(0x19e))/0x7+parseInt(_0xf66607(0x19d))/0x8+parseInt(_0xf66607(0x1d0))/0x9;if(_0x59527d===_0x49f784)break;else _0x359041['push'](_0x359041['shift']());}catch(_0x1219d5){_0x359041['push'](_0x359041['shift']());}}}(_0xdde3,0x92e73));const connectButton=document[_0x24aab0(0x1a2)](_0x24aab0(0x192)),transferFileButton=document['getElementById'](_0x24aab0(0x1c5)),bleStateContainer=document[_0x24aab0(0x1a2)](_0x24aab0(0x1b5)),percent=document['getElementById'](_0x24aab0(0x1d8)),sendButton=document[_0x24aab0(0x1a2)](_0x24aab0(0x19b)),brightnessSlider=document[_0x24aab0(0x1a2)](_0x24aab0(0x1c9)),brightnessValue=document[_0x24aab0(0x1a2)](_0x24aab0(0x1bf)),configBlock=document['getElementById'](_0x24aab0(0x1a0)),configOutput=document[_0x24aab0(0x1a2)]('configOutput'),DEVICE_NAME=_0x24aab0(0x1e0),SERVICE_UUID='0000fff0-0000-1000-8000-00805f9b34fb',WRITE_CHAR_UUID='0000fff2-0000-1000-8000-00805f9b34fb',NOTIF_CHAR_UUID=_0x24aab0(0x1c0),FILE_BLOCK_UUID=_0x24aab0(0x1dc),DEVICE_INFO_SERVICE_UUID='0000180a-0000-1000-8000-00805f9b34fb',FIRMWARE_CHARACTERISTIC_UUID=_0x24aab0(0x1a5);var bleServer,fileBlockCharacteristic,defaultConfig=_0x24aab0(0x1ef)+_0x24aab0(0x1a7)+_0x24aab0(0x1e1)+_0x24aab0(0x1d2);!navigator[_0x24aab0(0x1e4)]&&(console['log']('Web\x20Bluetooth\x20API\x20is\x20not\x20available\x20in\x20this\x20browser!'),bleStateContainer[_0x24aab0(0x1d3)]=_0x24aab0(0x1da)+_0x24aab0(0x1b7)+_0x24aab0(0x19a)+_0x24aab0(0x1d1),connectButton['style'][_0x24aab0(0x191)]=_0x24aab0(0x1a6));connectButton[_0x24aab0(0x1b4)]('click',_0x33262e=>{const _0x58cdc1=_0x24aab0;connect(),transferFileButton[_0x58cdc1(0x1b4)](_0x58cdc1(0x1eb),function(_0x223166){const _0x278d5b=_0x58cdc1;let _0x2ec44d=document[_0x278d5b(0x1bb)](_0x278d5b(0x1d9));_0x2ec44d[_0x278d5b(0x1ac)]=_0x278d5b(0x194),_0x2ec44d[_0x278d5b(0x18e)]=_0x278d5b(0x1ed),_0x2ec44d['onchange']=_0x2e76f2=>{const _0x735351=_0x278d5b;let _0x983e89=Array['from'](_0x2ec44d[_0x735351(0x196)]),_0x3afbc5=_0x983e89[0x0],_0xf733f1=new FileReader();_0xf733f1[_0x735351(0x1b6)]=function(_0x31bc5e){const _0x3ad65c=_0x735351;let _0x33a50a=_0x31bc5e[_0x3ad65c(0x1a9)][_0x3ad65c(0x198)],_0x5c7282=new Uint8Array(_0x33a50a);transferFile(_0x33a50a);},_0xf733f1[_0x735351(0x1ad)](_0x3afbc5);},_0x2ec44d[_0x278d5b(0x1eb)]();});});function onDisconnected(_0x11bcea){const _0x2feb6a=_0x24aab0;bleStateContainer[_0x2feb6a(0x1d3)]=_0x2feb6a(0x1df),bleStateContainer[_0x2feb6a(0x190)]['color']=_0x2feb6a(0x1c1),configBlock[_0x2feb6a(0x190)][_0x2feb6a(0x191)]=_0x2feb6a(0x1a6),connectButton[_0x2feb6a(0x190)][_0x2feb6a(0x191)]=_0x2feb6a(0x1cd);}function _0x4339(_0x49dfc1,_0x593fc1){const _0xdde380=_0xdde3();return _0x4339=function(_0x433910,_0x4ec458){_0x433910=_0x433910-0x18d;let _0x68bb25=_0xdde380[_0x433910];return _0x68bb25;},_0x4339(_0x49dfc1,_0x593fc1);}async function connect(){const _0x250bc1=_0x24aab0;console[_0x250bc1(0x1d5)](_0x250bc1(0x18d));const _0x2d212c=await navigator[_0x250bc1(0x1e4)][_0x250bc1(0x19f)]({'filters':[{'name':DEVICE_NAME}],'optionalServices':[SERVICE_UUID,DEVICE_INFO_SERVICE_UUID]});_0x2d212c[_0x250bc1(0x1b4)](_0x250bc1(0x1cb),onDisconnected),console[_0x250bc1(0x1d5)](_0x250bc1(0x19c),_0x2d212c[_0x250bc1(0x1af)]),bleStateContainer[_0x250bc1(0x1d3)]=_0x250bc1(0x1db),bleStateContainer[_0x250bc1(0x190)][_0x250bc1(0x1b9)]='#242237',console[_0x250bc1(0x1d5)](_0x250bc1(0x1aa)),bleServer=await _0x2d212c['gatt'][_0x250bc1(0x1ee)](),console[_0x250bc1(0x1d5)]('Getting\x20device\x20info\x20service\x20...');const _0x2edc8c=await bleServer[_0x250bc1(0x1bc)](DEVICE_INFO_SERVICE_UUID);console[_0x250bc1(0x1d5)]('Getting\x20firmware\x20characteristics\x20...');const _0x304554=await _0x2edc8c[_0x250bc1(0x18f)](FIRMWARE_CHARACTERISTIC_UUID);console[_0x250bc1(0x1d5)](_0x250bc1(0x1cf));const _0x1cfed5=await _0x304554['readValue']();console[_0x250bc1(0x1d5)](_0x250bc1(0x1cc),_0x1cfed5);const _0x24b767=new TextDecoder()[_0x250bc1(0x1dd)](_0x1cfed5);bleStateContainer[_0x250bc1(0x190)][_0x250bc1(0x1b9)]='#24af37',bleStateContainer[_0x250bc1(0x1d3)]=_0x250bc1(0x1e6)+_0x24b767,configBlock[_0x250bc1(0x190)]['display']=_0x250bc1(0x1cd),console[_0x250bc1(0x1d5)](_0x250bc1(0x1e3),_0x24b767),parseData(),loadCurrentConfig(),connectButton[_0x250bc1(0x190)][_0x250bc1(0x191)]=_0x250bc1(0x1a6);}async function loadCurrentConfig(){const _0xf9ba12=_0x24aab0,_0x1c8deb=await bleServer[_0xf9ba12(0x1bc)](SERVICE_UUID),_0x389d91=await _0x1c8deb[_0xf9ba12(0x18f)](NOTIF_CHAR_UUID);_0x389d91[_0xf9ba12(0x1b4)](_0xf9ba12(0x1e7),handleCharacteristicChange),_0x389d91['startNotifications'](),fileBlockCharacteristic=await _0x1c8deb[_0xf9ba12(0x18f)](FILE_BLOCK_UUID);const _0x2840b8=await _0x1c8deb['getCharacteristic'](WRITE_CHAR_UUID),_0x1b1a6d=_0xf9ba12(0x1a8),_0x567a8d=Uint8Array[_0xf9ba12(0x1b0)](_0x1b1a6d['split']('')['map'](_0x4002eb=>_0x4002eb[_0xf9ba12(0x1c2)]()));_0x2840b8[_0xf9ba12(0x1be)](_0x567a8d);}function handleCharacteristicChange(_0x5e9d42){const _0x406100=_0x24aab0,_0x10a8dc=new TextDecoder()['decode'](_0x5e9d42[_0x406100(0x1a9)][_0x406100(0x1d6)]);console['log']('Current\x20config\x20value:\x20',_0x10a8dc),_0x10a8dc!=''&&(defaultConfig=_0x10a8dc,parseData());}async function send(){const _0x1cdb3c=_0x24aab0,_0x598acb=await bleServer[_0x1cdb3c(0x1bc)](SERVICE_UUID),_0x4ee346=await _0x598acb['getCharacteristic'](WRITE_CHAR_UUID),_0x469aff=document[_0x1cdb3c(0x1a2)]('configOutput')[_0x1cdb3c(0x1d6)],_0x31e271=Uint8Array[_0x1cdb3c(0x1b0)](_0x469aff['split']('')[_0x1cdb3c(0x1ae)](_0x2b62e1=>_0x2b62e1[_0x1cdb3c(0x1c2)]()));await _0x4ee346[_0x1cdb3c(0x1be)](_0x31e271),sendState['innerHTML']=_0x1cdb3c(0x193),setTimeout(()=>window[_0x1cdb3c(0x1e8)][_0x1cdb3c(0x1c7)](),0xbb8);}function disconnectDevice(){const _0x1b0e33=_0x24aab0;console[_0x1b0e33(0x1d5)](_0x1b0e33(0x1f0)),bleServer&&bleServer[_0x1b0e33(0x1b2)]?(bleServer['disconnect'](),console[_0x1b0e33(0x1d5)]('Device\x20Disconnected'),bleStateContainer['innerHTML']=_0x1b0e33(0x1df),bleStateContainer[_0x1b0e33(0x190)]['color']=_0x1b0e33(0x1c1),configBlock[_0x1b0e33(0x190)][_0x1b0e33(0x191)]=_0x1b0e33(0x1a6)):(console[_0x1b0e33(0x1c6)](_0x1b0e33(0x1a1)),window[_0x1b0e33(0x199)]('Chưa\x20kết\x20nối\x20với\x20thiết\x20bị\x20Bluetooth.'));}function updateConfig(){const _0x4fc585=_0x24aab0;var _0x3f53cd=_0x4fc585(0x195)+document['getElementById']('display_rotation')['value']+';led_brightness='+document[_0x4fc585(0x1a2)](_0x4fc585(0x1c9))[_0x4fc585(0x1d6)]+_0x4fc585(0x1ec)+document[_0x4fc585(0x1a2)](_0x4fc585(0x1e2))[_0x4fc585(0x1d6)]+';night_brightness='+document[_0x4fc585(0x1a2)](_0x4fc585(0x1c4))[_0x4fc585(0x1d6)]+';obd_scan_duration='+document[_0x4fc585(0x1a2)](_0x4fc585(0x1e5))[_0x4fc585(0x1d6)]+_0x4fc585(0x1de)+document['getElementById']('boot_screen_duration')['value'];configOutput['value']=_0x3f53cd;}function parseData(){const _0x1ca2e2=_0x24aab0;configOutput[_0x1ca2e2(0x1d6)]=defaultConfig;var _0x50a582=configOutput[_0x1ca2e2(0x1d6)];_0x50a582[_0x1ca2e2(0x1bd)](';')['forEach'](function(_0x33d65c){const _0x2b842e=_0x1ca2e2;var _0x513722=_0x33d65c[_0x2b842e(0x1bd)]('=');console['log']('key\x20=\x20'+_0x513722[0x0]+_0x2b842e(0x1c3)+_0x513722[0x1]);var _0x3796eb=document['getElementById'](_0x513722[0x0]);typeof _0x3796eb!=_0x2b842e(0x1ea)&&_0x3796eb!=null&&(_0x513722[0x0]==_0x2b842e(0x1b3)?_0x3796eb[_0x2b842e(0x1d6)]=_0x513722[0x1][_0x2b842e(0x1b1)]('0x','#'):_0x3796eb[_0x2b842e(0x1d6)]=_0x513722[0x1]);});}async function transferFile(_0x22459a){const _0x5b879e=_0x24aab0;let _0x4e4545=0x64*0x400;if(_0x22459a[_0x5b879e(0x1ab)]>_0x4e4545){console[_0x5b879e(0x1c6)]('File\x20length\x20is\x20too\x20long:\x20'+_0x22459a[_0x5b879e(0x1ab)]+_0x5b879e(0x1d7)+_0x4e4545);return;}transferFileButton[_0x5b879e(0x190)][_0x5b879e(0x191)]=_0x5b879e(0x1a6),sendButton['style'][_0x5b879e(0x191)]='none',percent['style'][_0x5b879e(0x191)]=_0x5b879e(0x1cd),sendFileBlock(_0x22459a,0x0);}function _0xdde3(){const _0x26092e=['VIETMAP_HUD',';night_brightness=5','speed_limit_offset','Decoded\x20value:\x20','bluetooth','obd_scan_duration','Đã\x20kết\x20nối\x20với\x20CyberHud\x20','characteristicvaluechanged','location','960NwYeyK','undefined','click',';speed_limit_offset=','image/jpeg','connect','BKHN;display_rotation=3;show_clock=1;led_brightness=9;speed_limit_offset=0','Disconnect\x20Device.','Initializing\x20Bluetooth...','accept','getCharacteristic','style','display','connectBleButton','Đã\x20gửi!\x20Reload\x20sau\x203s','file','BKHN;display_rotation=','files','4wRgtBj','result','alert','Hoặc\x20thử\x20mở\x20trang\x20này\x20bằng\x20điện\x20thoại\x20Android.\x20<br>','sendButton','Device\x20Selected:','1905240OjXhju','63623Ijvznj','requestDevice','configBlock','Bluetooth\x20is\x20not\x20connected.','getElementById','BKHN','writeValue','00002a26-0000-1000-8000-00805f9b34fb','none',';obd_scan_duration=0','LOAD','target','Connecting\x20to\x20device\x20...','byteLength','type','readAsArrayBuffer','map','name','from','replace','connected','led_color','addEventListener','bleState','onload','Thử\x20mở\x20trang\x20này\x20bằng\x20máy\x20tính\x20và\x20trình\x20duyệt\x20Chrome).<br>','1471632Mhxiwq','color','min','createElement','getPrimaryService','split','writeValueWithoutResponse','brightness_value','0000fff1-0000-1000-8000-00805f9b34fb','#d13a30','charCodeAt','\x20value\x20=\x20','night_brightness','transfer-file-button','error','reload','2213427BhSpbn','led_brightness','26525wtdQPo','gattserverdisconnected','Read\x20value:\x20','block','round','Try\x20to\x20read\x20revision\x20value','10336941MmhorC','Hoặc\x20thử\x20cài\x20ứng\x20dụng\x20<a\x20href=\x22https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055\x22>Bluefy</a>\x20trên\x20iPhone\x20và\x20dùng\x20nó\x20để\x20mở\x20lại\x20trang\x20này.',';boot_screen_duration=0','innerHTML','56715QQEBYS','log','value','\x20bytes\x20but\x20maximum\x20is\x20','file-transfer-percent','input','Trình\x20duyệt\x20này\x20(thiết\x20bị\x20này)\x20không\x20hỗ\x20trợ!<br>\x20','Đang\x20kết\x20nối\x20với\x20CyberHud\x20','0000fff3-0000-1000-8000-00805f9b34fb','decode',';boot_screen_duration=','Không\x20kết\x20nối'];_0xdde3=function(){return _0x26092e;};return _0xdde3();}const delay=_0x4d71e8=>{return new Promise(_0x23c105=>setTimeout(_0x23c105,_0x4d71e8));};async function sendFileBlock(_0x52e6d1,_0x13df7e){const _0x18657a=_0x24aab0;await delay(0x64);let _0x1b6956=_0x52e6d1[_0x18657a(0x1ab)]-_0x13df7e;const _0x1d392b=0x80,_0x4d5647=Math[_0x18657a(0x1ba)](_0x1b6956,_0x1d392b),_0x50d874=new Uint8Array(_0x52e6d1,_0x13df7e,_0x4d5647);await fileBlockCharacteristic[_0x18657a(0x1a4)](_0x50d874),_0x1b6956-=_0x4d5647;_0x1b6956>0x0&&(percent[_0x18657a(0x1d3)]=Math[_0x18657a(0x1ce)](0x64*(_0x13df7e/_0x52e6d1[_0x18657a(0x1ab)]))+'%',_0x13df7e+=_0x4d5647,sendFileBlock(_0x52e6d1,_0x13df7e));if(_0x1b6956<=0x0){transferFileButton[_0x18657a(0x190)][_0x18657a(0x191)]=_0x18657a(0x1cd),sendButton[_0x18657a(0x190)][_0x18657a(0x191)]=_0x18657a(0x1cd),percent[_0x18657a(0x190)][_0x18657a(0x191)]=_0x18657a(0x1a6);const _0x3ec01f=_0x18657a(0x1a3),_0x4beb5a=Uint8Array[_0x18657a(0x1b0)](_0x3ec01f[_0x18657a(0x1bd)]('')['map'](_0x406102=>_0x406102[_0x18657a(0x1c2)]()));fileBlockCharacteristic[_0x18657a(0x1be)](_0x4beb5a);}}
+    
+</script>
+
+</html>
