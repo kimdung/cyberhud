@@ -1,11 +1,11 @@
 {
   "name": "CyberHud",
-  "version": "8.09",
+  "version": "8.10",
   "new_install_prompt_erase": false,
   "builds": [
     {
       "chipFamily": "ESP32",
-      "parts": [{ "path": "firmware/firmware.bin", "offset": 0 }]
+      "parts": [{ "path": "firmware/firmware_green.bin", "offset": 0 }]
     }
   ]
 }

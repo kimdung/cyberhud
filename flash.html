@@ -80,9 +80,23 @@
   <body>
     <div class="content">
       <h1>Nạp firmware cho CyberHud</h1>
-      <p>Cắm CyberHud vào máy tính. Ấn nút dưới để nạp firmware mới nhất.</p>    
+      <p>Cắm CyberHud vào máy tính. Trả lời câu hỏi sau:<br>Lúc tự tắt màn CyberHud có đèn mầu gì nhấp nháy?</p>    
+      
+      <ul class="radios">
+        <li>
+          <label><input type="radio" name="type" value="blue" /> Mầu xanh <span style="color: blue; font-weight: bold;">BLUE</span></label>
+        </li>
+        <li>
+          <label><input type="radio" name="type" value="green" /> Mầu xanh <span style="color: green; font-weight: bold;">GREEN</label>
+        </li>
+      </ul>
+<!--       <p class="button-row" align="center">
+        <esp-web-install-button class="invisible"></esp-web-install-button>
+      </p> -->
+
+
       <p class="button-row" align="left">
-        <esp-web-install-button manifest="./manifest.json">
+        <esp-web-install-button class="invisible">
           <button slot="activate">Install</button>
           <span slot="unsupported">Trình duyệt này không hỗ trợ. Thử dùng chrome trên máy tính</span>
           <span slot="not-allowed">Ah snap, you are not allowed to use this on HTTP!</span>
@@ -98,5 +112,15 @@
                   <a href="https://www.wch.cn/downloads/CH341SER_MAC_ZIP.html" target="_blank" rel="noopener">Mac</a></li>
       </ul>  
     </i>
+
+    <script>
+      document.querySelectorAll('input[name="type"]').forEach(radio =>
+        radio.addEventListener("change", () => {
+          const button = document.querySelector('esp-web-install-button');
+          button.manifest = `./manifest_${radio.value}.json`;
+          button.classList.remove('invisible');
+        }
+      ));
+    </script>
   </body>
 </html>
