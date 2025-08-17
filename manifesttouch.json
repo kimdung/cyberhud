@@ -5,7 +5,7 @@
   "builds": [
     {
       "chipFamily": "ESP32",
-      "parts": [{ "path": "firmware/firmwaretouch.bin", "offset": 0 }]
+      "parts": [{ "path": "firmware/firmware_touch.bin", "offset": 0 }]
     }
   ]
 }
